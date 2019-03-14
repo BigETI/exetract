@@ -9,4 +9,4 @@ exetract example.exe
 ```
 
 ## License
-The [https://github.com/BigETI/exetract/blob/master/LICENSE](license) for exetract is available at https://github.com/BigETI/exetract/blob/master/LICENSE
+[The license](https://github.com/BigETI/exetract/blob/master/LICENSE) for exetract is available at https://github.com/BigETI/exetract/blob/master/LICENSE
