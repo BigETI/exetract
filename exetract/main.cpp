@@ -13,7 +13,7 @@ using namespace std;
 /// <param name="type">Resource type</param>
 /// <param name="result">Result</param>
 /// <returns>Resource type name</returns>
-static string GetResourceTypeName(LPCWSTR type, string & result)
+static string & GetResourceTypeName(LPCWSTR type, string & result)
 {
 	switch (reinterpret_cast<const long>(type))
 	{
@@ -127,7 +127,7 @@ static void PrintError(DWORD error)
 BOOL CALLBACK EnumResNameProc(_In_opt_ HMODULE hModule, _In_ LPCWSTR lpType, _In_ LPWSTR lpName, _In_ LONG_PTR lParam)
 {
 	HRSRC resource_handle(FindResourceW(hModule, lpName, lpType));
-	cout << "\tResource name: \"" << reinterpret_cast<const int>(lpName) << "\"" << endl;
+	cout << "\tResource name: \"" << reinterpret_cast<const long>(lpName) << "\"" << endl;
 	if (resource_handle)
 	{
 		HGLOBAL resource_data_handle(LoadResource(hModule, resource_handle));
@@ -138,7 +138,7 @@ BOOL CALLBACK EnumResNameProc(_In_opt_ HMODULE hModule, _In_ LPCWSTR lpType, _In
 			{
 				string resource_type_name;
 				DWORD resource_size(SizeofResource(hModule, resource_handle));
-				string file_name(GetResourceTypeName(lpType, resource_type_name) + "_" + to_string(reinterpret_cast<const int>(lpName)) + ".bin");
+				string file_name(GetResourceTypeName(lpType, resource_type_name) + "_" + to_string(reinterpret_cast<const long>(lpName)) + ".bin");
 				ofstream ofs(file_name, ios::binary);
 				if (ofs.is_open())
 				{
