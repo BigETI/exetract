@@ -3,11 +3,21 @@
 using namespace std;
 using namespace Exetract;
 
+/// <summary>
+/// Constructor
+/// </summary>
+/// <param name="moduleHandle">Module handle</param>
+/// <param name="resourceHandle">Resource handle</param>
+/// <param name="resourceType">Resource type</param>
+/// <param name="resourceName">Resource name</param>
 Resource::Resource(HMODULE moduleHandle, HRSRC resourceHandle, LPCWSTR resourceType, LPWSTR resourceName) : moduleHandle(moduleHandle), resourceHandle(resourceHandle), resourceType(resourceType), resourceName(resourceName)
 {
 	// ...
 }
 
+/// <summary>
+/// Destructor
+/// </summary>
 Resource::~Resource()
 {
 	if (resourceHandle)
@@ -17,13 +27,18 @@ Resource::~Resource()
 	}
 }
 
+/// <summary>
+/// Get resource type
+/// </summary>
+/// <param name="result">Result</param>
+/// <returns>Resource type</returns>
 wstring & Resource::GetType(wstring & result) const
 {
 	return (result = to_wstring(reinterpret_cast<const unsigned int>(resourceType)));
 }
 
 /// <summary>
-/// Get type name
+/// Get resource type name
 /// </summary>
 /// <param name="result">Result</param>
 /// <returns>Resource type name</returns>
@@ -101,11 +116,20 @@ wstring & Resource::GetTypeName(wstring & result) const
 	return result;
 }
 
+/// <summary>
+/// Get resource name
+/// </summary>
+/// <param name="result">Result</param>
+/// <returns>Resource name</returns>
 wstring & Resource::GetName(wstring & result) const
 {
 	return (result = to_wstring(reinterpret_cast<const unsigned int>(resourceName)));
 }
 
+/// <summary>
+/// Write to file stream
+/// </summary>
+/// <param name="outputFileStream">Output file stream</param>
 void Resource::WriteToFileStream(ofstream & outputFileStream)
 {
 	if (outputFileStream.is_open())
@@ -133,6 +157,10 @@ void Resource::WriteToFileStream(ofstream & outputFileStream)
 	}
 }
 
+/// <summary>
+/// Get error
+/// </summary>
+/// <returns>Error</returns>
 DWORD Resource::GetError() const
 {
 	return error;

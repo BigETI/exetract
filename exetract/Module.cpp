@@ -3,7 +3,11 @@
 using namespace std;
 using namespace Exetract;
 
-
+/// <summary>
+/// Constructor
+/// </summary>
+/// <param name="moduleHandle">Module handle</param>
+/// <param name="error">Error</param>
 Module::Module(HMODULE moduleHandle, DWORD error) : moduleHandle(moduleHandle), error(error)
 {
 	// ...
@@ -52,6 +56,9 @@ BOOL CALLBACK Module::EnumResTypeProc(_In_opt_ HMODULE hModule, _In_ LPWSTR lpTy
 	return (lParam ? TRUE : FALSE);
 }
 
+/// <summary>
+/// Destructor
+/// </summary>
 Module::~Module()
 {
 	if (moduleHandle)
@@ -61,6 +68,11 @@ Module::~Module()
 	}
 }
 
+/// <summary>
+/// Load module
+/// </summary>
+/// <param name="path">Module path</param>
+/// <returns>Module</returns>
 shared_ptr<Module> Module::Load(const wstring & path)
 {
 	HMODULE module_handle(LoadLibraryW(path.c_str()));
@@ -68,16 +80,29 @@ shared_ptr<Module> Module::Load(const wstring & path)
 	return shared_ptr<Module>(new Module(module_handle, error));
 }
 
+/// <summary>
+/// Is module loaded
+/// </summary>
+/// <returns>"true" if loaded, otherwise "false"</returns>
 bool Module::IsLoaded() const
 {
 	return (moduleHandle != nullptr);
 }
 
+/// <summary>
+/// Get error
+/// </summary>
+/// <returns>Error</returns>
 DWORD Module::GetError() const
 {
 	return error;
 }
 
+/// <summary>
+/// Load resources
+/// </summary>
+/// <param name="result">Result</param>
+/// <returns>Loaded resources</returns>
 vector<shared_ptr<Resource>> & Module::LoadResources(vector<shared_ptr<Resource>> & result)
 {
 	result.clear();

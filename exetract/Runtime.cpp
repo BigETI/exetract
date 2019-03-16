@@ -6,6 +6,9 @@ using namespace std;
 using namespace std::filesystem;
 using namespace Exetract;
 
+/// <summary>
+/// Help command
+/// </summary>
 const Command Runtime::helpCommand(CmdShowHelpTopic, L"Shows help topic", vector<wstring>() =
 	{
 		L"This command shows the available help topics.",
@@ -13,6 +16,10 @@ const Command Runtime::helpCommand(CmdShowHelpTopic, L"Shows help topic", vector
 		L"Usage: --help <help topic (optional)>",
 		L"Example: --help module"
 	});
+
+/// <summary>
+/// Module command
+/// </summary>
 const Command Runtime::moduleCommand(CmdDefineModulePath, L"Defines module path", vector<wstring>() =
 	{
 		L"This command defines the module path to extract resource data or files from.",
@@ -21,6 +28,10 @@ const Command Runtime::moduleCommand(CmdDefineModulePath, L"Defines module path"
 		L"Usage: --module <module path>",
 		L"Example: --module example.exe"
 	});
+
+/// <summary>
+/// Type command
+/// </summary>
 const Command Runtime::typeCommand(CmdDefineResourceTypeFilter, L"Adds resource type to filter", vector<wstring>() =
 	{
 		L"This commands sets the resource type filter for the current specified module.",
@@ -28,6 +39,10 @@ const Command Runtime::typeCommand(CmdDefineResourceTypeFilter, L"Adds resource 
 		L"Usage: --type <resource types>",
 		L"Example: --type ICON MANIFEST"
 	});
+
+/// <summary>
+/// Name command
+/// </summary>
 const Command Runtime::nameCommand(CmdDefineResourceNameFilter, L"Adds resource name to filter", vector<wstring>() =
 	{
 		L"This commands sets the resource name filter for the current specified module.",
@@ -35,13 +50,21 @@ const Command Runtime::nameCommand(CmdDefineResourceNameFilter, L"Adds resource 
 		L"Usage: --name <resource names>",
 		L"Example: --name 1 2"
 	});
-const Command Runtime::resetCommand(CmdResetFilters, L"Resets all filters", vector<wstring>() =
+
+/// <summary>
+/// Reset command
+/// </summary>
+const Command Runtime::resetCommand(CmdResetModuleOptions, L"Resets all module options", vector<wstring>() =
 	{
 		L"This commands resets all module options.",
 		L"",
-		L"Usage: --reset"
+		L"Usage: --reset",
 		L"Example: --reset"
 	});
+
+/// <summary>
+/// Output command
+/// </summary>
 const Command Runtime::outputCommand(CmdDefineOutputPath, L"Specifies an output path", vector<wstring>() =
 	{
 		L"This command specifies an output path for the extracted resource data or files.",
@@ -50,6 +73,9 @@ const Command Runtime::outputCommand(CmdDefineOutputPath, L"Specifies an output 
 		L"Example: --output dump"
 	});
 
+/// <summary>
+/// Commands
+/// </summary>
 const map<wstring, const Command &> Runtime::commands =
 {
 	{ L"h", helpCommand },
@@ -66,10 +92,25 @@ const map<wstring, const Command &> Runtime::commands =
 	{ L"output", outputCommand }
 };
 
+/// <summary>
+/// Module options
+/// </summary>
 vector<pair<shared_ptr<Module>, ModuleOptions>> Runtime::moduleOptions;
+
+/// <summary>
+/// Current module options
+/// </summary>
 ModuleOptions Runtime::currentModuleOptions;
+
+/// <summary>
+/// Show help
+/// </summary>
 bool Runtime::showHelp(true);
 
+/// <summary>
+/// Show help topic command
+/// </summary>
+/// <param name="params">Command parameters</param>
 void Runtime::CmdShowHelpTopic(const vector<wstring> & params)
 {
 	if (params.size() > 0UL)
@@ -82,6 +123,10 @@ void Runtime::CmdShowHelpTopic(const vector<wstring> & params)
 	}
 }
 
+/// <summary>
+/// Define module path command
+/// </summary>
+/// <param name="params">Command parameters</param>
 void Runtime::CmdDefineModulePath(const vector<wstring> & params)
 {
 	if (params.size() > 0)
@@ -98,6 +143,10 @@ void Runtime::CmdDefineModulePath(const vector<wstring> & params)
 	}
 }
 
+/// <summary>
+/// Define resource type filter command
+/// </summary>
+/// <param name="params">Command parameters</param>
 void Runtime::CmdDefineResourceTypeFilter(const vector<wstring> & params)
 {
 	currentModuleOptions.ClearTypeFilter();
@@ -107,6 +156,10 @@ void Runtime::CmdDefineResourceTypeFilter(const vector<wstring> & params)
 	}
 }
 
+/// <summary>
+/// Define resource name filter command
+/// </summary>
+/// <param name="params">Command parameters</param>
 void Runtime::CmdDefineResourceNameFilter(const vector<wstring> & params)
 {
 	currentModuleOptions.ClearNameFilter();
@@ -116,7 +169,11 @@ void Runtime::CmdDefineResourceNameFilter(const vector<wstring> & params)
 	}
 }
 
-void Runtime::CmdResetFilters(const vector<wstring> & params)
+/// <summary>
+/// Reset module options command
+/// </summary>
+/// <param name="params">Command parameters</param>
+void Runtime::CmdResetModuleOptions(const vector<wstring> & params)
 {
 	currentModuleOptions.Clear();
 	if (params.size() > 0UL)
@@ -125,6 +182,10 @@ void Runtime::CmdResetFilters(const vector<wstring> & params)
 	}
 }
 
+/// <summary>
+/// Define output path command
+/// </summary>
+/// <param name="params">Command parameters</param>
 void Runtime::CmdDefineOutputPath(const vector<wstring> & params)
 {
 	if (params.size() == 1UL)
@@ -171,6 +232,11 @@ void Runtime::PrintError(DWORD error)
 	wcout << L"Error (" << error << L") : \"" << GetLastErrorAsString(error, e) << L"\"" << endl;
 }
 
+/// <summary>
+/// Runtime main entry point
+/// </summary>
+/// <param name="args">Command line arguments</param>
+/// <returns>Exit code</returns>
 int Runtime::Main(const vector<wstring> & args)
 {
 	int ret(0);
@@ -311,6 +377,9 @@ int Runtime::Main(const vector<wstring> & args)
 	return ret;
 }
 
+/// <summary>
+/// Show help topic
+/// </summary>
 void Runtime::ShowHelpTopic()
 {
 	wcout << L"Start of help topic:" << endl << endl;
@@ -322,6 +391,10 @@ void Runtime::ShowHelpTopic()
 	showHelp = false;
 }
 
+/// <summary>
+/// Show help topic
+/// </summary>
+/// <param name="helpTopic">Help topic</param>
 void Runtime::ShowHelpTopic(const wstring & helpTopic)
 {
 	auto it(commands.find(helpTopic));
@@ -335,6 +408,10 @@ void Runtime::ShowHelpTopic(const wstring & helpTopic)
 	}
 }
 
+/// <summary>
+/// Show help topic
+/// </summary>
+/// <param name="command">Command</param>
 void Runtime::ShowHelpTopic(const Command & command)
 {
 	const vector<wstring> & full_description(command.GetFullDescription());

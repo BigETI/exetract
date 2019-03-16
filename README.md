@@ -11,6 +11,11 @@ For detailed help type
 exetract --help
 ```
 
+For 32-bit modules use
+```BATCH
+exetract32 example.exe
+```
+
 Legacy syntax is still available as
 ```BATCH
 exetract example.exe
