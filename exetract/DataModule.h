@@ -11,9 +11,9 @@
 namespace Exetract
 {
 	/// <summary>
-	/// Module class
+	/// Data module class
 	/// </summary>
-	class Module
+	class DataModule
 	{
 	private:
 		/// <summary>
@@ -27,6 +27,11 @@ namespace Exetract
 		DWORD error;
 
 		/// <summary>
+		/// Current data module
+		/// </summary>
+		static DataModule *currentDataModule;
+
+		/// <summary>
 		/// Resources
 		/// </summary>
 		std::vector<std::shared_ptr<Resource>> *resources;
@@ -36,7 +41,7 @@ namespace Exetract
 		/// </summary>
 		/// <param name="moduleHandle">Module handle</param>
 		/// <param name="error">Error</param>
-		Module(HMODULE moduleHandle, DWORD error);
+		DataModule(HMODULE moduleHandle, DWORD error);
 
 		/// <summary>
 		/// Enumerate resource name procedure
@@ -57,25 +62,25 @@ namespace Exetract
 		/// <returns>"TRUE" to keep enumerating, otherwise "FALSE"</returns>
 		static BOOL CALLBACK EnumResTypeProc(_In_opt_ HMODULE hModule, _In_ LPWSTR lpType, _In_ LONG_PTR lParam);
 
-		Module();
-		Module(const Module &);
-		Module & operator = (const Module &);
+		DataModule();
+		DataModule(const DataModule &);
+		DataModule & operator = (const DataModule &);
 
 	public:
 		/// <summary>
 		/// Destructor
 		/// </summary>
-		~Module();
+		~DataModule();
 
 		/// <summary>
-		/// Load module
+		/// Load data module
 		/// </summary>
 		/// <param name="path">Module path</param>
-		/// <returns>Module</returns>
-		static std::shared_ptr<Module> Load(const std::wstring & path);
+		/// <returns>Data module</returns>
+		static std::shared_ptr<DataModule> Load(const std::wstring & path);
 
 		/// <summary>
-		/// Is module loaded
+		/// Is data module loaded
 		/// </summary>
 		/// <returns>"true" if loaded, otherwise "false"</returns>
 		bool IsLoaded() const;

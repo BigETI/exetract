@@ -24,13 +24,13 @@
     <ClCompile Include="Runtime.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Module.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Resource.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleOptions.cpp">
+    <ClCompile Include="DataModule.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="DataModuleOptions.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,13 +41,13 @@
     <ClInclude Include="Runtime.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Module.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleOptions.h">
+    <ClInclude Include="DataModule.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="DataModuleOptions.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

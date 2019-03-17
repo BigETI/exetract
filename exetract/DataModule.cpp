@@ -1,14 +1,16 @@
-#include "Module.h"
+#include "DataModule.h"
 
 using namespace std;
 using namespace Exetract;
+
+DataModule *DataModule::currentDataModule(nullptr);
 
 /// <summary>
 /// Constructor
 /// </summary>
 /// <param name="moduleHandle">Module handle</param>
 /// <param name="error">Error</param>
-Module::Module(HMODULE moduleHandle, DWORD error) : moduleHandle(moduleHandle), error(error)
+DataModule::DataModule(HMODULE moduleHandle, DWORD error) : moduleHandle(moduleHandle), error(error)
 {
 	// ...
 }
@@ -21,25 +23,24 @@ Module::Module(HMODULE moduleHandle, DWORD error) : moduleHandle(moduleHandle), 
 /// <param name="lpName">Resource name</param>
 /// <param name="lParam">Parameters</param>
 /// <returns>"TRUE" to keep enumerating, otherwise "FALSE"</returns>
-BOOL CALLBACK Module::EnumResNameProc(_In_opt_ HMODULE hModule, _In_ LPCWSTR lpType, _In_ LPWSTR lpName, _In_ LONG_PTR lParam)
+BOOL CALLBACK DataModule::EnumResNameProc(_In_opt_ HMODULE hModule, _In_ LPCWSTR lpType, _In_ LPWSTR lpName, _In_ LONG_PTR lParam)
 {
-	Module *module(reinterpret_cast<Module *>(lParam));
-	if (module)
+	if (currentDataModule)
 	{
-		if (module->resources)
+		if (currentDataModule->resources)
 		{
 			HRSRC resource_handle(FindResourceW(hModule, lpName, lpType));
 			if (resource_handle)
 			{
-				module->resources->push_back(shared_ptr<Resource>(new Resource(hModule, resource_handle, lpType, lpName)));
+				currentDataModule->resources->push_back(shared_ptr<Resource>(new Resource(hModule, resource_handle, lpType, lpName)));
 			}
 			else
 			{
-				module->error = GetLastError();
+				currentDataModule->error = GetLastError();
 			}
 		}
 	}
-	return (module ? TRUE : FALSE);
+	return (currentDataModule ? TRUE : FALSE);
 }
 
 /// <summary>
@@ -49,17 +50,17 @@ BOOL CALLBACK Module::EnumResNameProc(_In_opt_ HMODULE hModule, _In_ LPCWSTR lpT
 /// <param name="lpType">Resource type</param>
 /// <param name="lParam">Parameters</param>
 /// <returns>"TRUE" to keep enumerating, otherwise "FALSE"</returns>
-BOOL CALLBACK Module::EnumResTypeProc(_In_opt_ HMODULE hModule, _In_ LPWSTR lpType, _In_ LONG_PTR lParam)
+BOOL CALLBACK DataModule::EnumResTypeProc(_In_opt_ HMODULE hModule, _In_ LPWSTR lpType, _In_ LONG_PTR lParam)
 {
 	string resource_type_name;
 	EnumResourceNamesW(hModule, lpType, EnumResNameProc, lParam);
-	return (lParam ? TRUE : FALSE);
+	return (currentDataModule ? TRUE : FALSE);
 }
 
 /// <summary>
 /// Destructor
 /// </summary>
-Module::~Module()
+DataModule::~DataModule()
 {
 	if (moduleHandle)
 	{
@@ -69,22 +70,22 @@ Module::~Module()
 }
 
 /// <summary>
-/// Load module
+/// Load data module
 /// </summary>
 /// <param name="path">Module path</param>
-/// <returns>Module</returns>
-shared_ptr<Module> Module::Load(const wstring & path)
+/// <returns>Data module</returns>
+shared_ptr<DataModule> DataModule::Load(const wstring & path)
 {
-	HMODULE module_handle(LoadLibraryW(path.c_str()));
+	HMODULE module_handle(LoadLibraryExW(path.c_str(), nullptr, LOAD_LIBRARY_AS_DATAFILE | LOAD_LIBRARY_AS_IMAGE_RESOURCE));
 	DWORD error(GetLastError());
-	return shared_ptr<Module>(new Module(module_handle, error));
+	return shared_ptr<DataModule>(new DataModule(module_handle, error));
 }
 
 /// <summary>
-/// Is module loaded
+/// Is data module loaded
 /// </summary>
 /// <returns>"true" if loaded, otherwise "false"</returns>
-bool Module::IsLoaded() const
+bool DataModule::IsLoaded() const
 {
 	return (moduleHandle != nullptr);
 }
@@ -93,7 +94,7 @@ bool Module::IsLoaded() const
 /// Get error
 /// </summary>
 /// <returns>Error</returns>
-DWORD Module::GetError() const
+DWORD DataModule::GetError() const
 {
 	return error;
 }
@@ -103,13 +104,16 @@ DWORD Module::GetError() const
 /// </summary>
 /// <param name="result">Result</param>
 /// <returns>Loaded resources</returns>
-vector<shared_ptr<Resource>> & Module::LoadResources(vector<shared_ptr<Resource>> & result)
+vector<shared_ptr<Resource>> & DataModule::LoadResources(vector<shared_ptr<Resource>> & result)
 {
 	result.clear();
 	if (moduleHandle)
 	{
 		resources = &result;
-		EnumResourceTypesW(moduleHandle, EnumResTypeProc, reinterpret_cast<int>(this));
+		currentDataModule = this;
+		EnumResourceTypesW(moduleHandle, EnumResTypeProc, 0UL);
+		resources = nullptr;
+		currentDataModule = nullptr;
 	}
 	return result;
 }

@@ -3,8 +3,8 @@
 
 #	include <map>
 #	include "Command.h"
-#	include "ModuleOptions.h"
-#	include "Module.h"
+#	include "DataModuleOptions.h"
+#	include "DataModule.h"
 
 /// <summary>
 /// Exetract namespace
@@ -53,14 +53,14 @@ namespace Exetract
 		static const std::map<std::wstring, const Command &> commands;
 
 		/// <summary>
-		/// Module options
+		/// Data module options
 		/// </summary>
-		static std::vector<std::pair<std::shared_ptr<Module>, ModuleOptions>> moduleOptions;
+		static std::vector<std::pair<std::shared_ptr<DataModule>, DataModuleOptions>> dataModuleOptions;
 
 		/// <summary>
-		/// Current module options
+		/// Current data module options
 		/// </summary>
-		static ModuleOptions currentModuleOptions;
+		static DataModuleOptions currentDataModuleOptions;
 
 		/// <summary>
 		/// Show help
@@ -74,7 +74,7 @@ namespace Exetract
 		static void CmdShowHelpTopic(const std::vector<std::wstring> & params);
 
 		/// <summary>
-		/// Define module path command
+		/// Define data module path command
 		/// </summary>
 		/// <param name="params">Command parameters</param>
 		static void CmdDefineModulePath(const std::vector<std::wstring> & params);
@@ -92,7 +92,7 @@ namespace Exetract
 		static void CmdDefineResourceNameFilter(const std::vector<std::wstring> & params);
 
 		/// <summary>
-		/// Reset module options command
+		/// Reset data module options command
 		/// </summary>
 		/// <param name="params">Command parameters</param>
 		static void CmdResetModuleOptions(const std::vector<std::wstring> & params);

@@ -11,9 +11,9 @@
 namespace Exetract
 {
 	/// <summary>
-	/// Module options class
+	/// Data module options class
 	/// </summary>
-	class ModuleOptions
+	class DataModuleOptions
 	{
 	private:
 		/// <summary>
@@ -35,18 +35,18 @@ namespace Exetract
 		/// <summary>
 		/// Default constructor
 		/// </summary>
-		ModuleOptions();
+		DataModuleOptions();
 
 		/// <summary>
 		/// Copy constructor
 		/// </summary>
-		/// <param name="moduleOptions">Module options</param>
-		ModuleOptions(const ModuleOptions & moduleOptions);
+		/// <param name="dataModuleOptions">Data module options</param>
+		DataModuleOptions(const DataModuleOptions & dataModuleOptions);
 
 		/// <summary>
 		/// Destructor
 		/// </summary>
-		~ModuleOptions();
+		~DataModuleOptions();
 
 		/// <summary>
 		/// Add resource type filter
@@ -109,9 +109,9 @@ namespace Exetract
 		/// <summary>
 		/// Assign operator
 		/// </summary>
-		/// <param name="moduleOptions">Module options</param>
+		/// <param name="dataModuleOptions">Data module options</param>
 		/// <returns>This object</returns>
-		ModuleOptions & operator = (const ModuleOptions & moduleOptions);
+		DataModuleOptions & operator = (const DataModuleOptions & dataModuleOptions);
 	};
 }
 

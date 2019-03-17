@@ -20,12 +20,12 @@ const Command Runtime::helpCommand(CmdShowHelpTopic, L"Shows help topic", vector
 /// <summary>
 /// Module command
 /// </summary>
-const Command Runtime::moduleCommand(CmdDefineModulePath, L"Defines module path", vector<wstring>() =
+const Command Runtime::moduleCommand(CmdDefineModulePath, L"Defines data module path", vector<wstring>() =
 	{
-		L"This command defines the module path to extract resource data or files from.",
+		L"This command defines the data module path to extract resource data or files from.",
 		L"Good practice: Specify module options before this command.",
 		L"",
-		L"Usage: --module <module path>",
+		L"Usage: --module <data module path>",
 		L"Example: --module example.exe"
 	});
 
@@ -54,9 +54,9 @@ const Command Runtime::nameCommand(CmdDefineResourceNameFilter, L"Adds resource 
 /// <summary>
 /// Reset command
 /// </summary>
-const Command Runtime::resetCommand(CmdResetModuleOptions, L"Resets all module options", vector<wstring>() =
+const Command Runtime::resetCommand(CmdResetModuleOptions, L"Resets all data module options", vector<wstring>() =
 	{
-		L"This commands resets all module options.",
+		L"This commands resets all data module options.",
 		L"",
 		L"Usage: --reset",
 		L"Example: --reset"
@@ -95,12 +95,12 @@ const map<wstring, const Command &> Runtime::commands =
 /// <summary>
 /// Module options
 /// </summary>
-vector<pair<shared_ptr<Module>, ModuleOptions>> Runtime::moduleOptions;
+vector<pair<shared_ptr<DataModule>, DataModuleOptions>> Runtime::dataModuleOptions;
 
 /// <summary>
 /// Current module options
 /// </summary>
-ModuleOptions Runtime::currentModuleOptions;
+DataModuleOptions Runtime::currentDataModuleOptions;
 
 /// <summary>
 /// Show help
@@ -124,7 +124,7 @@ void Runtime::CmdShowHelpTopic(const vector<wstring> & params)
 }
 
 /// <summary>
-/// Define module path command
+/// Define data module path command
 /// </summary>
 /// <param name="params">Command parameters</param>
 void Runtime::CmdDefineModulePath(const vector<wstring> & params)
@@ -133,7 +133,7 @@ void Runtime::CmdDefineModulePath(const vector<wstring> & params)
 	{
 		for (auto & path : params)
 		{
-			moduleOptions.push_back(pair<shared_ptr<Module>, const ModuleOptions>(Module::Load(path), currentModuleOptions));
+			dataModuleOptions.push_back(pair<shared_ptr<DataModule>, const DataModuleOptions>(DataModule::Load(path), currentDataModuleOptions));
 		}
 	}
 	else
@@ -149,10 +149,10 @@ void Runtime::CmdDefineModulePath(const vector<wstring> & params)
 /// <param name="params">Command parameters</param>
 void Runtime::CmdDefineResourceTypeFilter(const vector<wstring> & params)
 {
-	currentModuleOptions.ClearTypeFilter();
+	currentDataModuleOptions.ClearTypeFilter();
 	for (auto & type_filter : params)
 	{
-		currentModuleOptions.AddTypeFilter(type_filter);
+		currentDataModuleOptions.AddTypeFilter(type_filter);
 	}
 }
 
@@ -162,20 +162,20 @@ void Runtime::CmdDefineResourceTypeFilter(const vector<wstring> & params)
 /// <param name="params">Command parameters</param>
 void Runtime::CmdDefineResourceNameFilter(const vector<wstring> & params)
 {
-	currentModuleOptions.ClearNameFilter();
+	currentDataModuleOptions.ClearNameFilter();
 	for (auto & name_filter : params)
 	{
-		currentModuleOptions.AddNameFilter(name_filter);
+		currentDataModuleOptions.AddNameFilter(name_filter);
 	}
 }
 
 /// <summary>
-/// Reset module options command
+/// Reset data module options command
 /// </summary>
 /// <param name="params">Command parameters</param>
 void Runtime::CmdResetModuleOptions(const vector<wstring> & params)
 {
-	currentModuleOptions.Clear();
+	currentDataModuleOptions.Clear();
 	if (params.size() > 0UL)
 	{
 		cout << "Warning: Reset command ignores additional parameters." << endl;
@@ -191,7 +191,7 @@ void Runtime::CmdDefineOutputPath(const vector<wstring> & params)
 	if (params.size() == 1UL)
 	{
 		const wstring & output_path(params[0]);
-		if (!(currentModuleOptions.SetOutputPath(output_path)))
+		if (!(currentDataModuleOptions.SetOutputPath(output_path)))
 		{
 			wcout << L"Output path \"" << output_path << L"\" does not exist." << endl;
 		}
@@ -293,21 +293,21 @@ int Runtime::Main(const vector<wstring> & args)
 	{
 		args_param.first.Invoke(args_param.second);
 	}
-	if (moduleOptions.size() > 0UL)
+	if (dataModuleOptions.size() > 0UL)
 	{
-		moduleOptions.rbegin()->second = currentModuleOptions;
-		for (auto & module_option : moduleOptions)
+		dataModuleOptions.rbegin()->second = currentDataModuleOptions;
+		for (auto & data_module_options : dataModuleOptions)
 		{
-			Module & module(*(module_option.first));
-			if (module.IsLoaded())
+			DataModule & data_module(*(data_module_options.first));
+			if (data_module.IsLoaded())
 			{
 				vector<shared_ptr<Resource>> resources;
-				module.LoadResources(resources);
+				data_module.LoadResources(resources);
 				for (auto & resource : resources)
 				{
 					bool write_file(true);
-					const set<wstring> & type_filter(module_option.second.GetTypeFilter());
-					const set<wstring> & name_filter(module_option.second.GetNameFilter());
+					const set<wstring> & type_filter(data_module_options.second.GetTypeFilter());
+					const set<wstring> & name_filter(data_module_options.second.GetNameFilter());
 					wstring resource_type_name;
 					wstring resource_type;
 					wstring resource_name;
@@ -348,7 +348,7 @@ int Runtime::Main(const vector<wstring> & args)
 					if (write_file)
 					{
 						path directory;
-						path p(module_option.second.GetOutputPath(directory) / path(resource_type_name + L"_" + resource_name + L".bin"));
+						path p(data_module_options.second.GetOutputPath(directory) / path(resource_type_name + L"_" + resource_name + L".bin"));
 						ofstream ofs(p, ios::binary);
 						if (ofs.is_open())
 						{
@@ -365,7 +365,7 @@ int Runtime::Main(const vector<wstring> & args)
 			}
 			else
 			{
-				PrintError(module.GetError());
+				PrintError(data_module.GetError());
 			}
 		}
 		showHelp = false;

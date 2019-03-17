@@ -131,15 +131,15 @@
   <ItemGroup>
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Module.cpp" />
-    <ClCompile Include="ModuleOptions.cpp" />
+    <ClCompile Include="DataModule.cpp" />
+    <ClCompile Include="DataModuleOptions.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Runtime.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Command.h" />
-    <ClInclude Include="Module.h" />
-    <ClInclude Include="ModuleOptions.h" />
+    <ClInclude Include="DataModule.h" />
+    <ClInclude Include="DataModuleOptions.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Runtime.h" />
   </ItemGroup>

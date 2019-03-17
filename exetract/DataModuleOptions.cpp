@@ -1,4 +1,4 @@
-#include "ModuleOptions.h"
+#include "DataModuleOptions.h"
 
 using namespace std;
 using namespace std::filesystem;
@@ -7,7 +7,7 @@ using namespace Exetract;
 /// <summary>
 /// Default constructor
 /// </summary>
-ModuleOptions::ModuleOptions()
+DataModuleOptions::DataModuleOptions()
 {
 	// ...
 }
@@ -15,18 +15,16 @@ ModuleOptions::ModuleOptions()
 /// <summary>
 /// Copy constructor
 /// </summary>
-/// <param name="moduleOptions">Module options</param>
-ModuleOptions::ModuleOptions(const ModuleOptions & moduleOptions)
+/// <param name="dataModuleOptions">Data module options</param>
+DataModuleOptions::DataModuleOptions(const DataModuleOptions & dataModuleOptions) : typeFilter(dataModuleOptions.typeFilter), nameFilter(dataModuleOptions.nameFilter), outputPath(dataModuleOptions.outputPath)
 {
-	typeFilter = moduleOptions.typeFilter;
-	nameFilter = moduleOptions.nameFilter;
-	outputPath = moduleOptions.outputPath;
+	// ...
 }
 
 /// <summary>
 /// Destructor
 /// </summary>
-ModuleOptions::~ModuleOptions()
+DataModuleOptions::~DataModuleOptions()
 {
 	// ...
 }
@@ -35,7 +33,7 @@ ModuleOptions::~ModuleOptions()
 /// Add resource type filter
 /// </summary>
 /// <param name="resourceType">Resource type filter</param>
-void ModuleOptions::AddTypeFilter(const wstring & resourceType)
+void DataModuleOptions::AddTypeFilter(const wstring & resourceType)
 {
 	typeFilter.insert(resourceType);
 }
@@ -44,7 +42,7 @@ void ModuleOptions::AddTypeFilter(const wstring & resourceType)
 /// Add resource name filter
 /// </summary>
 /// <param name="resourceName">Resource name</param>
-void ModuleOptions::AddNameFilter(const wstring & resourceName)
+void DataModuleOptions::AddNameFilter(const wstring & resourceName)
 {
 	nameFilter.insert(resourceName);
 }
@@ -54,7 +52,7 @@ void ModuleOptions::AddNameFilter(const wstring & resourceName)
 /// </summary>
 /// <param name="outputPath">Output path</param>
 /// <returns>"true" if output path exists, otherwise "false"</returns>
-bool ModuleOptions::SetOutputPath(const wstring & outputPath)
+bool DataModuleOptions::SetOutputPath(const wstring & outputPath)
 {
 	bool ret(false);
 	if (filesystem::exists(outputPath))
@@ -68,7 +66,7 @@ bool ModuleOptions::SetOutputPath(const wstring & outputPath)
 /// <summary>
 /// Clear resource type filter
 /// </summary>
-void ModuleOptions::ClearTypeFilter()
+void DataModuleOptions::ClearTypeFilter()
 {
 	typeFilter.clear();
 }
@@ -76,7 +74,7 @@ void ModuleOptions::ClearTypeFilter()
 /// <summary>
 /// Clear resource name filter
 /// </summary>
-void ModuleOptions::ClearNameFilter()
+void DataModuleOptions::ClearNameFilter()
 {
 	nameFilter.clear();
 }
@@ -84,15 +82,15 @@ void ModuleOptions::ClearNameFilter()
 /// <summary>
 /// Clear output path
 /// </summary>
-void ModuleOptions::ClearOutputPath()
+void DataModuleOptions::ClearOutputPath()
 {
 	outputPath.clear();
 }
 
 /// <summary>
-/// Clear module options
+/// Clear data module options
 /// </summary>
-void ModuleOptions::Clear()
+void DataModuleOptions::Clear()
 {
 	typeFilter.clear();
 	nameFilter.clear();
@@ -103,7 +101,7 @@ void ModuleOptions::Clear()
 /// Get resource type filter
 /// </summary>
 /// <returns>Resource type filter</returns>
-const set<wstring> & ModuleOptions::GetTypeFilter() const
+const set<wstring> & DataModuleOptions::GetTypeFilter() const
 {
 	return typeFilter;
 }
@@ -112,7 +110,7 @@ const set<wstring> & ModuleOptions::GetTypeFilter() const
 /// Get resource name filter
 /// </summary>
 /// <returns>Resource name filter</returns>
-const set<wstring> & ModuleOptions::GetNameFilter() const
+const set<wstring> & DataModuleOptions::GetNameFilter() const
 {
 	return nameFilter;
 }
@@ -122,7 +120,7 @@ const set<wstring> & ModuleOptions::GetNameFilter() const
 /// </summary>
 /// <param name="result">Result</param>
 /// <returns>Output path</returns>
-path ModuleOptions::GetOutputPath(path & result) const
+path DataModuleOptions::GetOutputPath(path & result) const
 {
 	return (result = (outputPath.empty() ? filesystem::current_path() : filesystem::canonical(outputPath)));
 }
@@ -130,12 +128,12 @@ path ModuleOptions::GetOutputPath(path & result) const
 /// <summary>
 /// Assign operator
 /// </summary>
-/// <param name="moduleOptions">Module options</param>
+/// <param name="dataModuleOptions">Module options</param>
 /// <returns>This object</returns>
-ModuleOptions & ModuleOptions::operator = (const ModuleOptions & moduleOptions)
+DataModuleOptions & DataModuleOptions::operator = (const DataModuleOptions & dataModuleOptions)
 {
-	typeFilter = moduleOptions.typeFilter;
-	nameFilter = moduleOptions.nameFilter;
-	outputPath = moduleOptions.outputPath;
+	typeFilter = dataModuleOptions.typeFilter;
+	nameFilter = dataModuleOptions.nameFilter;
+	outputPath = dataModuleOptions.outputPath;
 	return (*this);
 }
